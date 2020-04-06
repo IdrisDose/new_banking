@@ -1,5 +1,5 @@
 Config                            = {}
-Config.Locale                     = 'fr'
+Config.Locale                     = 'en'
 
 Config.Banks = {
 	{name="Bank", id=108, x=150.266, y=-1040.203, z=29.374},
