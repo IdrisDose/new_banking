@@ -26,24 +26,26 @@ end)
 --===============================================
 if bankMenu then
 	Citizen.CreateThread(function()
-	while true do
-		Wait(0)
-	if nearBank() or nearATM() then
-			DisplayHelpText(_U('helptext'))	
-		if IsControlJustPressed(1, 38) then
-			inMenu = true
-			SetNuiFocus(true, true)
-			SendNUIMessage({type = 'openGeneral'})
-			TriggerServerEvent('bank:balance')
-			local ped = GetPlayerPed(-1)
+		while true do
+
+			Citizen.Wait(0)
+			if nearBank() or nearATM() then
+					DisplayHelpText(_U('helptext'))
+					if IsControlJustPressed(1, 38) then
+						inMenu = true
+						SetNuiFocus(true, true)
+						SendNUIMessage({type = 'openGeneral'})
+						TriggerServerEvent('bank:balance')
+						local ped = GetPlayerPed(-1)
+					end
+			end
+			if IsControlJustPressed(1, 322) then
+				inMenu = false
+				SetNuiFocus(false, false)
+				SendNUIMessage({type = 'closeAll'})
+			end
+
 		end
-	end				
-		if IsControlJustPressed(1, 322) then
-		inMenu = false
-			SetNuiFocus(false, false)
-			SendNUIMessage({type = 'close'})
-		end
-	end
 	end)
 end
 
@@ -74,7 +76,7 @@ RegisterNetEvent('currentbalance1')
 AddEventHandler('currentbalance1', function(balance)
 	local id = PlayerId()
 	local playerName = GetPlayerName(id)
-	
+
 	SendNUIMessage({
 		type = "balanceHUD",
 		balance = balance,
@@ -140,10 +142,10 @@ end)
 function nearBank()
 	local player = GetPlayerPed(-1)
 	local playerloc = GetEntityCoords(player, 0)
-	
+
 	for _, search in pairs(Config.Banks) do
 		local distance = GetDistanceBetweenCoords(search.x, search.y, search.z, playerloc['x'], playerloc['y'], playerloc['z'], true)
-		
+
 		if distance <= 3 then
 			return true
 		end
@@ -153,12 +155,14 @@ end
 function nearATM()
 	local player = GetPlayerPed(-1)
 	local playerloc = GetEntityCoords(player, 0)
-	
+
 	for _, search in pairs(Config.ATM) do
 		local distance = GetDistanceBetweenCoords(search.x, search.y, search.z, playerloc['x'], playerloc['y'], playerloc['z'], true)
-		if distance <= 3 then
+
+		if distance <= 1 then
 			return true
 		end
+
 	end
 end
 
